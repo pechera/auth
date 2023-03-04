@@ -20,7 +20,11 @@ const auth = require("./middleware/auth");
 const verify = require("./middleware/verify");
 
 //VALIDATION
-const { registerSchema, loginSchema } = require("./functions/validation");
+const {
+  registerSchema,
+  loginSchema,
+  passwordSchema,
+} = require("./functions/validation");
 
 // FUNTTIONS
 const login = require("./functions/login");
@@ -136,7 +140,11 @@ app.get("/registration", (req, res) => {
 
 // REGISTRATION ROUTE
 app.post("/registration", async (req, res) => {
-  const { name, username, password, email, captcha } = req.body;
+  const { name, username, password, newpassword, email, captcha } = req.body;
+
+  if (password !== newpassword) {
+    return res.render("error", { message: "Passwords not match" });
+  }
 
   if (captcha !== req.session.captcha) {
     return res.render("error", { message: "Captcha invalid" });
@@ -224,7 +232,7 @@ app.post("/reset", async (req, res) => {
   try {
     const user = await User.findOne({ email });
 
-    if (!user) {
+    if (!user || !user.activated) {
       return res.render("error", { message: "User not found" });
     }
 
@@ -296,6 +304,10 @@ app.post("/password", async (req, res) => {
   }
 
   try {
+    await passwordSchema.validateAsync({
+      password,
+    });
+
     const tempLink = await Templink.findOne({ link });
 
     const user = await User.findOne({ username: tempLink.username });
