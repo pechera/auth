@@ -1,0 +1,66 @@
+body {
+  color: #212427;
+  margin: 0;
+  padding: 0;
+  background-color: #f8f9fd;
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 50px;
+  border-bottom: 1px solid lightgrey;
+  padding-left: 5%;
+  padding-right: 5%;
+  background-color: #fff;
+}
+
+.menu ul {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.menu li {
+  margin: 0 10px;
+}
+
+.menu a {
+  color: #333;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.container {
+  max-width: 90%; /* Максимальная ширина контейнера */
+  margin: 0 auto; /* Центрируем контейнер по горизонтали */
+  padding: 0 20px; /* Добавляем отступы слева и справа для контента */
+}
+
+.activated {
+  color: lightgrey;
+}
+
+a {
+  text-decoration: none;
+  color: #212427;
+}
+
+a:link {
+  text-decoration: none;
+}
+
+a:visited {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+a:active {
+  text-decoration: underline;
+}

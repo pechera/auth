@@ -1,0 +1,29 @@
+<html>
+  <head>
+    <title>Dashboard</title>
+    <link href="css/dashboard.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <nav>
+      <div class="logo">
+        <h2>Dashboard</h2>
+      </div>
+
+      <div class="menu">
+        <ul>
+          <li><a href="/dashboard">Dashboard</a></li>
+          <li><a href="/profile">Profile</a></li>
+          <li><a href="#">Menu 2</a></li>
+          <li><a href="#">Menu 3</a></li>
+        </ul>
+      </div>
+      <div class="logout">
+        <a href="/logout">Logout</a>
+      </div>
+    </nav>
+    <main class="container">
+      <p>Hello, <%= username %></p>
+      <p>Protected content</p>
+    </main>
+  </body>
+</html>
