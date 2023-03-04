@@ -22,6 +22,7 @@
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.0.0",
     "nanoid": "^3.3.4",
+    "nodemailer": "^6.9.1",
     "path": "^0.12.7",
     "svg-captcha": "^1.4.0"
   },

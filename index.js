@@ -13,6 +13,7 @@ const svgCaptcha = require("svg-captcha");
 // DATABASE SCHEMAS
 const User = require("./models/User");
 const Token = require("./models/Token");
+const Templink = require("./models/Templink");
 
 // MIDDLEWARES
 const auth = require("./middleware/auth");
@@ -22,9 +23,11 @@ const verify = require("./middleware/verify");
 const { registerSchema, loginSchema } = require("./functions/validation");
 
 // FUNTTIONS
-const loginUser = require("./functions/loginUser");
+const login = require("./functions/login");
+const sendMail = require("./functions/mail/sendMail");
 
 require("dotenv").config({ path: "./env/.env" });
+process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
 
 // Connect to MongoDB
 (async function () {
@@ -65,6 +68,10 @@ app.get("/", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
+  const acsessToken = req.cookies.authorization;
+  if (acsessToken) {
+    return res.redirect("/dashboard");
+  }
   res.render("login");
 });
 
@@ -86,7 +93,7 @@ app.post("/login", async (req, res) => {
       return res.render("error", { message: "Incorrect password" });
     }
 
-    const acsessToken = await loginUser(username);
+    const acsessToken = await login(username);
     res.cookie("authorization", acsessToken);
 
     res.redirect("/dashboard");
@@ -146,7 +153,7 @@ app.post("/registration", async (req, res) => {
     // Проверяем, что пользователь с таким же username или email не существует
     const user = await User.findOne({ $or: [{ username }, { email }] });
     if (user) {
-      res.render("error", { message: "User already exists" });
+      return res.render("error", { message: "User already exists" });
     }
 
     // Хешируем пароль
@@ -155,6 +162,8 @@ app.post("/registration", async (req, res) => {
 
     // Email activation link
     const link = nanoid(64);
+    const html = `<div><a href="${process.env.URL}/mail/${link}">Activate email</a></div>`;
+    sendMail(email, "Email verification", html);
 
     // Создаем новую запись пользователя в базе данных
     const newUser = new User({
@@ -168,7 +177,7 @@ app.post("/registration", async (req, res) => {
 
     await newUser.save();
 
-    const acsessToken = await loginUser(username);
+    const acsessToken = await login(username);
     res.cookie("authorization", acsessToken);
 
     res.redirect("/dashboard");
@@ -181,7 +190,6 @@ app.post("/registration", async (req, res) => {
 // EMAIL ACTIVATION ROUTE
 app.get("/mail/:link", async (req, res) => {
   const link = req.params.link;
-
   try {
     const user = await User.findOne({ activation_link: link });
 
@@ -199,6 +207,116 @@ app.get("/mail/:link", async (req, res) => {
 
       return res.send("Email activated");
     }
+  } catch (error) {
+    console.log(error);
+    res.render("error", { message: error.message });
+  }
+});
+
+// RESET PASSWORD ROUTE
+app.get("/reset", async (req, res) => {
+  res.render("reset");
+});
+
+app.post("/reset", async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.render("error", { message: "User not found" });
+    }
+
+    const link = nanoid(64);
+
+    const newTemplink = new Templink({
+      username: user.username,
+      date: Date.now(),
+      link: link,
+      visited: false,
+    });
+
+    await newTemplink.save();
+
+    const html = `<div><a href="${process.env.URL}/reset/${link}">Reset password</a></div>`;
+    sendMail(email, "Reset password", html);
+
+    return res.render("error", { message: "Link sent to your email" });
+  } catch (error) {
+    console.log(error);
+    res.render("error", { message: error.message });
+  }
+});
+
+// RESET PASSWORD ROUTE
+app.get("/reset/:link", async (req, res) => {
+  const link = req.params.link;
+
+  try {
+    const tempLink = await Templink.findOne({ link });
+    console.log(tempLink);
+
+    if (!tempLink) {
+      return res.render("error", { message: "Link not found" });
+    }
+
+    if (tempLink.visited) {
+      return res.render("error", { message: "Link is visited" });
+    }
+
+    tempLink.visited = true;
+
+    await tempLink.save();
+
+    const now = new Date();
+    const createdDate = new Date(tempLink.date);
+    const expirationTime = 24 * 60 * 60 * 1000; // 24 часа
+
+    const isValidLink = now - createdDate < expirationTime;
+
+    if (!isValidLink) {
+      return res.render("error", { message: "Link expired" });
+    }
+
+    req.session.templink = link;
+    return res.render("password");
+  } catch (error) {
+    console.log(error);
+    res.render("error", { message: error.message });
+  }
+});
+
+app.post("/password", async (req, res) => {
+  const { password, newpassword } = req.body;
+  const link = req.session.templink;
+
+  if (!link) {
+    return res.render("error", { message: "Link not found" });
+  }
+
+  try {
+    const tempLink = await Templink.findOne({ link });
+
+    const user = await User.findOne({ username: tempLink.username });
+
+    if (!user) {
+      return res.render("error", { message: "User not found" });
+    }
+
+    if (password !== newpassword) {
+      return res.render("error", { message: "Passwords not match" });
+    }
+
+    // Хешируем пароль
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    user.password = hashedPassword;
+
+    await user.save();
+
+    return res.render("error", { message: "Password changes" });
   } catch (error) {
     console.log(error);
     res.render("error", { message: error.message });

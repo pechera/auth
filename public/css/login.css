@@ -45,6 +45,10 @@ form {
   color: grey;
 }
 
+.reset a {
+  color: grey;
+}
+
 .button {
   appearance: none;
   background-color: #fafbfc;
