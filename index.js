@@ -9,7 +9,7 @@ const path = require("path");
 const app = express();
 
 require("dotenv").config({ path: "./env/.env" });
-process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
+process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0; // Временное решения для Nodemailer
 
 // Connect to MongoDB
 (async function () {

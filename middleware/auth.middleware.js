@@ -8,7 +8,7 @@ const auth = async (req, res, next) => {
     });
   }
 
-  next();
+  return next();
 };
 
 module.exports = auth;

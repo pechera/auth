@@ -37,10 +37,10 @@ const verify = async (req, res, next) => {
       });
 
       res.cookie("authorization", acsessToken);
-      next();
+      return next();
     }
 
-    next();
+    return next();
   } catch (error) {
     console.log(error);
     return res.render("message", { title: "Error", message: error.message });
