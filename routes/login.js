@@ -4,10 +4,10 @@ const bcrypt = require("bcrypt");
 const router = express.Router();
 
 //VALIDATION
-const { loginSchema } = require("../functions/validation");
+const { loginSchema } = require("../models/Joi.validation.model");
 
 // DATABASE SCHEMAS
-const User = require("../models/User");
+const User = require("../models/User.model");
 
 // LOGIN GET ROUTE
 router.get("/login", (req, res) => {
@@ -19,7 +19,7 @@ router.get("/login", (req, res) => {
 });
 
 // FUNTTIONS
-const login = require("../functions/login");
+const login = require("../services/loginUser");
 
 // LOGIN POST ROUTE
 router.post("/login", async (req, res) => {

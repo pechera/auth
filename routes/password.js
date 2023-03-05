@@ -5,14 +5,14 @@ const bcrypt = require("bcrypt");
 const router = express.Router();
 
 //VALIDATION
-const { passwordSchema } = require("../functions/validation");
+const { passwordSchema } = require("../models/Joi.validation.model");
 
 // DATABASE SCHEMAS
-const User = require("../models/User");
-const Templink = require("../models/Templink");
+const User = require("../models/User.model");
+const Templink = require("../models/Templink.model");
 
 // FUNTTIONS
-const sendMail = require("../functions/mail/sendMail");
+const sendMail = require("../services/sendMail");
 
 // RESET PASSWORD ROUTE
 router.get("/reset", async (req, res) => {

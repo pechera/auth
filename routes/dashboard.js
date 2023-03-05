@@ -4,8 +4,8 @@ const jwt = require("jsonwebtoken");
 const router = express.Router();
 
 // MIDDLEWARES
-const auth = require("../middleware/auth");
-const verify = require("../middleware/verify");
+const auth = require("../middleware/auth.middleware");
+const verify = require("../middleware/verify.middleware");
 
 // DASHBOARD ROUTE
 router.get("/dashboard", auth, verify, async (req, res) => {

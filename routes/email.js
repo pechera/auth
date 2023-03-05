@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 
 // DATABASE SCHEMAS
-const User = require("../models/User");
+const User = require("../models/User.model");
 
 // EMAIL ACTIVATION ROUTE
 router.get("/mail/:link", async (req, res) => {

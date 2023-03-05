@@ -6,10 +6,10 @@ const { nanoid } = require("nanoid");
 const router = express.Router();
 
 //VALIDATION
-const { registerSchema } = require("../functions/validation");
+const { registerSchema } = require("../models/Joi.validation.model");
 
 // DATABASE SCHEMAS
-const User = require("../models/User");
+const User = require("../models/User.model");
 
 // REGISTRATION ROUTE
 router.get("/registration", (req, res) => {
@@ -20,8 +20,8 @@ router.get("/registration", (req, res) => {
 });
 
 // FUNTTIONS
-const login = require("../functions/login");
-const sendMail = require("../functions/mail/sendMail");
+const login = require("../services/loginUser");
+const sendMail = require("../services/sendMail");
 
 // REGISTRATION ROUTE
 router.post("/registration", async (req, res) => {

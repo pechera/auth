@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 
-const Token = require("../models/Token");
+const Token = require("../models/Token.model");
 
 // LOGOUT ROUTE
 router.get("/logout", async (req, res) => {

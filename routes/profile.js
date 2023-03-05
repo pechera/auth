@@ -4,11 +4,11 @@ const jwt = require("jsonwebtoken");
 const router = express.Router();
 
 // DATABASE SCHEMAS
-const User = require("../models/User");
+const User = require("../models/User.model");
 
 // MIDDLEWARES
-const auth = require("../middleware/auth");
-const verify = require("../middleware/verify");
+const auth = require("../middleware/auth.middleware");
+const verify = require("../middleware/verify.middleware");
 
 // PROFILE ROUTE
 router.get("/profile", auth, verify, async (req, res) => {
