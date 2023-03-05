@@ -26,7 +26,10 @@ router.post("/reset", async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user || !user.activated) {
-      return res.render("error", { message: "User not found" });
+      return res.render("message", {
+        title: "Error",
+        message: "User not found",
+      });
     }
 
     const link = nanoid(64);
@@ -53,10 +56,16 @@ router.post("/reset", async (req, res) => {
     const html = `<div><a href="${process.env.URL}/reset/${link}">Reset password</a></div>`;
     sendMail(email, "Reset password", html);
 
-    return res.render("error", { message: "Link sent to your email" });
+    return res.render("message", {
+      title: "Message",
+      message: "Link sent to your email",
+    });
   } catch (error) {
     console.log(error);
-    res.render("error", { message: error.message });
+    res.render("message", {
+      title: "Error",
+      message: error.message,
+    });
   }
 });
 
@@ -68,11 +77,17 @@ router.get("/reset/:link", async (req, res) => {
     const tempLink = await Templink.findOne({ link });
 
     if (!tempLink) {
-      return res.render("error", { message: "Link not found" });
+      return res.render("message", {
+        title: "Error",
+        message: "Link not found",
+      });
     }
 
     if (tempLink.visited) {
-      return res.render("error", { message: "Link is visited" });
+      return res.render("message", {
+        title: "Error",
+        message: "Link is visited",
+      });
     }
 
     tempLink.visited = true;
@@ -86,14 +101,17 @@ router.get("/reset/:link", async (req, res) => {
     const isValidLink = now - createdDate < expirationTime;
 
     if (!isValidLink) {
-      return res.render("error", { message: "Link expired" });
+      return res.render("message", { title: "Error", message: "Link expired" });
     }
 
     req.session.templink = link;
     return res.render("password");
   } catch (error) {
     console.log(error);
-    res.render("error", { message: error.message });
+    res.render("message", {
+      title: "Error",
+      message: error.message,
+    });
   }
 });
 
@@ -102,7 +120,10 @@ router.post("/password", async (req, res) => {
   const link = req.session.templink;
 
   if (!link) {
-    return res.render("error", { message: "Link not found" });
+    return res.render("message", {
+      title: "Error",
+      message: "Link not found",
+    });
   }
 
   try {
@@ -115,11 +136,17 @@ router.post("/password", async (req, res) => {
     const user = await User.findOne({ username: tempLink.username });
 
     if (!user) {
-      return res.render("error", { message: "User not found" });
+      return res.render("message", {
+        title: "Error",
+        message: "User not found",
+      });
     }
 
     if (password !== newpassword) {
-      return res.render("error", { message: "Passwords not match" });
+      return res.render("message", {
+        title: "Error",
+        message: "Passwords not match",
+      });
     }
 
     // Хешируем пароль
@@ -130,10 +157,13 @@ router.post("/password", async (req, res) => {
 
     await user.save();
 
-    return res.render("error", { message: "Password changes" });
+    return res.render("message", {
+      title: "Message",
+      message: "Password changes",
+    });
   } catch (error) {
     console.log(error);
-    res.render("error", { message: error.message });
+    res.render("message", { title: "Error", message: error.message });
   }
 });
 

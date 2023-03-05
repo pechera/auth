@@ -28,11 +28,17 @@ router.post("/registration", async (req, res) => {
   const { name, username, password, newpassword, email, captcha } = req.body;
 
   if (password !== newpassword) {
-    return res.render("error", { message: "Passwords not match" });
+    return res.render("message", {
+      title: "Error",
+      message: "Passwords not match",
+    });
   }
 
   if (captcha !== req.session.captcha) {
-    return res.render("error", { message: "Captcha invalid" });
+    return res.render("message", {
+      title: "Error",
+      message: "Captcha invalid",
+    });
   }
 
   try {
@@ -46,7 +52,10 @@ router.post("/registration", async (req, res) => {
     // Проверяем, что пользователь с таким же username или email не существует
     const user = await User.findOne({ $or: [{ username }, { email }] });
     if (user) {
-      return res.render("error", { message: "User already exists" });
+      return res.render("message", {
+        title: "Error",
+        message: "User already exists",
+      });
     }
 
     // Хешируем пароль
@@ -76,7 +85,7 @@ router.post("/registration", async (req, res) => {
     res.redirect("/dashboard");
   } catch (error) {
     console.log(error);
-    res.render("error", { message: error.message });
+    res.render("message", { title: "Error", message: error.message });
   }
 });
 

@@ -1,5 +1,8 @@
 const jwt = require("jsonwebtoken");
 
+// DATABASE SCHEMAS
+const Token = require("../models/Token.model");
+
 const verify = async (req, res, next) => {
   const acsessToken = req.cookies.authorization;
 
@@ -23,7 +26,10 @@ const verify = async (req, res, next) => {
 
       if (isRefreshExpired) {
         res.clearCookie("authorization");
-        return res.render("error", { message: "Refresh token is expired" });
+        return res.render("message", {
+          title: "Error",
+          message: "Refresh token is expired",
+        });
       }
 
       const acsessToken = jwt.sign({ username }, process.env.TOKEN_SECRET, {
@@ -37,7 +43,7 @@ const verify = async (req, res, next) => {
     next();
   } catch (error) {
     console.log(error);
-    return res.render("error", { message: error.message });
+    return res.render("message", { title: "Error", message: error.message });
   }
 };
 

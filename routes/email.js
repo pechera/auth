@@ -27,7 +27,7 @@ router.get("/mail/:link", async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    res.render("error", { message: error.message });
+    res.render("message", { title: "Error", message: error.message });
   }
 });
 

@@ -18,7 +18,7 @@ router.get("/login", (req, res) => {
   res.render("login");
 });
 
-// FUNTTIONS
+// FUNCTIONS
 const login = require("../services/loginUser");
 
 // LOGIN POST ROUTE
@@ -31,12 +31,18 @@ router.post("/login", async (req, res) => {
 
     const user = await User.findOne({ username: username });
     if (!user) {
-      return res.render("error", { message: "User not found" });
+      return res.render("message", {
+        title: "Error",
+        message: "User not found",
+      });
     }
     const compare = await bcrypt.compare(password, user.password);
 
     if (!compare) {
-      return res.render("error", { message: "Incorrect password" });
+      return res.render("message", {
+        title: "Error",
+        message: "Incorrect password",
+      });
     }
 
     const acsessToken = await login(username);
@@ -45,7 +51,7 @@ router.post("/login", async (req, res) => {
     res.redirect("/dashboard");
   } catch (error) {
     console.log(error);
-    res.render("error", { message: error.message });
+    res.render("message", { title: "Error", message: "User not found" });
   }
 });
 

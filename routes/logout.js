@@ -16,13 +16,19 @@ router.get("/logout", async (req, res) => {
     res.clearCookie("authorization");
 
     if (!userToken) {
-      res.render("error", { message: "User not found" });
+      return res.render("message", {
+        title: "Error",
+        message: "User not found",
+      });
     }
 
     res.redirect("/login");
   } catch (error) {
     console.log(error);
-    res.render("error", { message: "Invalid token" });
+    res.render("message", {
+      title: "Error",
+      message: "Invalid token",
+    });
   }
 });
 
