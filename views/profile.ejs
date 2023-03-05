@@ -4,29 +4,7 @@
     <link href="css/profile.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
-    <nav>
-      <div class="logo">
-        <h2>Profile</h2>
-      </div>
-
-      <div class="menu">
-        <ul>
-          <li><a href="/dashboard">Dashboard</a></li>
-          <li>
-            <a href="/profile">Profile</a>
-          </li>
-          <li>
-            <a href="#">Menu 2</a>
-          </li>
-          <li>
-            <a href="#">Menu 3</a>
-          </li>
-        </ul>
-      </div>
-      <div class="logout">
-        <a href="/logout">Logout</a>
-      </div>
-    </nav>
+    <%- include('./partials/nav.ejs') %>
     <main class="container">
       <p><span></span>ID: <%= user.id %></p>
       <p>Name: <%= user.name %></p>

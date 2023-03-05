@@ -11,35 +11,6 @@ body {
   padding: 0 20px; /* Добавляем отступы слева и справа для контента */
 }
 
-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 50px;
-  border-bottom: 1px solid lightgrey;
-  padding-left: 5%;
-  padding-right: 5%;
-  background-color: #fff;
-}
-
-.menu ul {
-  display: flex;
-  justify-content: center;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.menu li {
-  margin: 0 10px;
-}
-
-.menu a {
-  color: #333;
-  text-decoration: none;
-  font-size: 16px;
-}
-
 a {
   text-decoration: none;
   color: #212427;
