@@ -7,4 +7,4 @@ const templinkSchema = new mongoose.Schema({
   visited: { type: Boolean, required: true, default: false },
 });
 
-module.exports = mongoose.model("templinkSchema", templinkSchema);
+module.exports = mongoose.model("templinkSchema", templinkSchema, "templink");
