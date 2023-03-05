@@ -5,6 +5,12 @@ body {
   background-color: #f8f9fd;
 }
 
+.container {
+  max-width: 90%; /* Максимальная ширина контейнера */
+  margin: 0 auto; /* Центрируем контейнер по горизонтали */
+  padding: 0 20px; /* Добавляем отступы слева и справа для контента */
+}
+
 nav {
   display: flex;
   justify-content: space-between;
@@ -32,12 +38,6 @@ nav {
   color: #333;
   text-decoration: none;
   font-size: 16px;
-}
-
-.container {
-  max-width: 90%; /* Максимальная ширина контейнера */
-  margin: 0 auto; /* Центрируем контейнер по горизонтали */
-  padding: 0 20px; /* Добавляем отступы слева и справа для контента */
 }
 
 a {

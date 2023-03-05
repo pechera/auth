@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+const path = require("path");
 
 const app = express();
 
@@ -26,7 +27,7 @@ process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
 
 app.set("view engine", "ejs");
 app.use(bodyParser.json(), cookieParser(), cors());
-app.use(express.static(__dirname + "/public"));
+app.use(express.static(path.join(__dirname, "/public")));
 
 app.use(
   bodyParser.urlencoded({
