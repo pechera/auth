@@ -31,14 +31,24 @@ router.post("/reset", async (req, res) => {
 
     const link = nanoid(64);
 
-    const newTemplink = new Templink({
-      username: user.username,
-      date: Date.now(),
-      link: link,
-      visited: false,
-    });
+    const userTemplink = await Templink.findOne({ username: user.username });
 
-    await newTemplink.save();
+    if (userTemplink) {
+      userTemplink.date = Date.now();
+      userTemplink.link = link;
+      userTemplink.visited = false;
+
+      await userTemplink.save();
+    } else {
+      const newTemplink = new Templink({
+        username: user.username,
+        date: Date.now(),
+        link: link,
+        visited: false,
+      });
+
+      await newTemplink.save();
+    }
 
     const html = `<div><a href="${process.env.URL}/reset/${link}">Reset password</a></div>`;
     sendMail(email, "Reset password", html);
